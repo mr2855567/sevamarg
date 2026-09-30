@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ta" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SevaMarg | சேவை மார்க் - Never Waste a Trip to a Govt Office</title>
+  <meta name="description" content="Voice-first, bilingual civic checklist and ground-reality navigator for Tamil Nadu certificates (Community, Income, Nativity, First Graduate)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1E293B" />
+</head>
+<body>
+  <!-- Top Accessibility & Announcement Bar -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="logo-group">
+        <div class="logo-badge">
+          <span class="emblem-icon">🏛️</span>
+          <div class="brand-text">
+            <h1 class="brand-title">SevaMarg <span class="brand-tamil">சேவை மார்க்</span></h1>
+            <p class="brand-subtitle" id="i18n-tagline">அரசு அலுவலகங்களுக்கு வீண் அலைச்சல் இனி வேண்டாம்</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Language Switcher -->
+        <div class="lang-switch-pill" role="group" aria-label="Language selection">
+          <button id="lang-ta-btn" class="lang-btn active" title="தமிழ்">தமிழ்</button>
+          <button id="lang-en-btn" class="lang-btn" title="English">English</button>
+        </div>
+
+        <!-- Voice Engine Switcher -->
+        <div class="voice-mode-pill" id="voice-mode-container">
+          <button id="voice-mode-btn" class="voice-mode-btn" title="குரல் இயந்திரத்தை மாற்ற (Switch Voice Engine)">
+            <span class="voice-mode-icon">🗣️</span>
+            <span id="voice-mode-label">இயற்கை தமிழ் (Natural)</span>
+          </button>
+          <button id="voice-test-btn" class="voice-test-btn" title="குரலைச் சோதிக்க (Test Voice)">
+            ▶️ டெஸ்ட்
+          </button>
+        </div>
+
+        <!-- CSC Operator Mode Switch -->
+        <button id="csc-toggle-btn" class="csc-pill-btn" aria-pressed="false">
+          <span class="csc-icon">🏪</span>
+          <span id="i18n-csc-label">CSC / e-Sevai Mode</span>
+          <span class="status-indicator"></span>
+        </button>
+
+        <!-- Global Audio Control Button -->
+        <button id="audio-stop-btn" class="audio-control-btn hidden" title="Stop Audio">
+          <span class="audio-wave"></span>
+          <span class="icon">⏹️</span>
+          <span id="audio-status-text">நிறுத்து</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CSC Operator Banner (Visible only in CSC Mode) -->
+  <div id="csc-operator-banner" class="csc-banner hidden">
+    <div class="banner-content">
+      <div class="csc-info-badge">
+        <span class="badge-tag">🏪 CSC OPERATOR PORTAL</span>
+        <span id="csc-center-display"><strong>ஸ்ரீ முருகன் சைபர் பாயிண்ட் & இ-சேவை</strong> | Ph: 98401 23456</span>
+      </div>
+      <div class="csc-actions">
+        <button id="edit-csc-settings-btn" class="btn-secondary-sm">✏️ விவரங்களை மாற்று (Edit)</button>
+        <button id="quick-print-slip-btn" class="btn-primary-sm">🖨️ வாடிக்கையாளர் ஸ்லிப் (Print)</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-layout">
+    <!-- Story Inspiration Card (Collapsible) -->
+    <section class="story-alert-card" id="story-card">
+      <div class="story-content">
+        <div class="story-icon">💡</div>
+        <div class="story-text">
+          <h4 id="i18n-story-title">லட்சுமியின் அனுபவம் உங்களின் பாடமாகட்டும்!</h4>
+          <p id="i18n-story-desc">மகள் கல்லூரி உதவித்தொகைக்கு சான்றிதழ் பெற லட்சுமி 3 முறை அலைந்தார்; 2 நாள் கூலி போனது. ஒரு முழுமையான சரிபார்ப்புப் பட்டியல் (Checklist) இருந்திருந்தால் இதைத் தவிர்த்திருக்கலாம். <strong>இங்குள்ள கள-நிலவர குறிப்புகளுடன் கிளம்புங்கள்!</strong></p>
+        </div>
+      </div>
+      <button class="close-alert-btn" id="dismiss-story-btn" title="Dismiss">×</button>
+    </section>
+
+    <!-- STEP 1: Service Selection Hub -->
+    <section class="section-card" id="services-section">
+      <div class="section-header">
+        <div class="header-left">
+          <span class="step-badge">படி 1 / Step 1</span>
+          <h2 id="i18n-step1-title">உங்களுக்குத் தேவையான சான்றிதழைத் தேர்ந்தெடுக்கவும்</h2>
+        </div>
+        <button class="voice-listen-btn" data-speak-target="step1-instructions" title="Listen instructions">
+          <span class="speaker-icon">🔊</span>
+          <span class="listen-text">கேட்க</span>
+        </button>
+      </div>
+      <p class="section-subtext" id="step1-instructions">தமிழ்நாடு அரசு மற்றும் வருவாய்த் துறையின் முக்கிய 4 சான்றிதழ்கள். தேவையான ஒன்றைத் தொடுங்கள்.</p>
+
+      <!-- Search & Category Filters -->
+      <div class="search-filter-wrapper">
+        <div class="search-input-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="service-search-input" placeholder="சான்றிதழ் பெயர் அல்லது வார்த்தையைத் தேடவும்... (e.g. வருமானம், TC, Community, College)" class="search-field" />
+          <button id="clear-search-btn" class="clear-search-btn hidden" title="Clear">✕</button>
+        </div>
+        <div class="tag-filters-group">
+          <button class="filter-chip active" data-filter="all">அனைத்தும் (All)</button>
+          <button class="filter-chip" data-filter="student">மாணவர் / பள்ளி (Student)</button>
+          <button class="filter-chip" data-filter="scholarship">உதவித்தொகை (Scholarship)</button>
+          <button class="filter-chip" data-filter="revenue">வருவாய்த் துறை (Revenue)</button>
+        </div>
+      </div>
+
+      <div class="services-grid" id="services-grid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- STEP 2: Smart Dynamic Questionnaire (Revealed when service selected) -->
+    <section class="section-card hidden" id="questionnaire-section">
+      <div class="section-header">
+        <div class="header-left">
+          <span class="step-badge">படி 2 / Step 2</span>
+          <h2 id="i18n-step2-title">சரியான பட்டியலை உருவாக்க 2 கேள்விகள்</h2>
+        </div>
+        <button class="voice-listen-btn" data-speak-target="step2-instructions" title="Listen instructions">
+          <span class="speaker-icon">🔊</span>
+          <span class="listen-text">கேட்க</span>
+        </button>
+      </div>
+      <p class="section-subtext" id="step2-instructions">உங்கள் தேவைக்கேற்ப தேவையற்ற ஆவணங்களை நீக்கி துல்லியமான பட்டியலை அளிக்கிறோம்.</p>
+
+      <div class="questions-wrapper">
+        <!-- Question A: Who is this for? -->
+        <div class="question-block">
+          <label class="q-label" id="i18n-q1-label">1. இந்த சான்றிதழ் யாருக்கு தேவைப்படுகிறது?</label>
+          <div class="options-group" id="target-audience-options">
+            <button class="option-btn active" data-value="self">
+              <span class="opt-icon">👤</span>
+              <span class="opt-label" data-i18n="target_self">எனக்கு (சுய தேவை)</span>
+            </button>
+            <button class="option-btn" data-value="child">
+              <span class="opt-icon">🎒</span>
+              <span class="opt-label" data-i18n="target_child">பள்ளி / கல்லூரி படிக்கும் குழந்தைக்கு</span>
+            </button>
+            <button class="option-btn" data-value="scholarship">
+              <span class="opt-icon">🎓</span>
+              <span class="opt-label" data-i18n="target_scholarship">கல்லூரி உதவித்தொகை / முதல் பட்டதாரி</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Question B: How will you apply? -->
+        <div class="question-block">
+          <label class="q-label" id="i18n-q2-label">2. நீங்கள் எங்கு அல்லது எப்படி விண்ணப்பிக்கப் போகிறீர்கள்?</label>
+          <div class="options-group" id="channel-options">
+            <button class="option-btn active" data-value="taluk">
+              <span class="opt-icon">🏛️</span>
+              <div class="opt-desc">
+                <span class="opt-label" data-i18n="chan_taluk">நேரடியாக வட்டாட்சியர் / VAO அலுவலகம்</span>
+                <span class="opt-hint" data-i18n="chan_taluk_hint">காகித ஆவணங்கள் & நேரில் கையொப்பம்</span>
+              </div>
+            </button>
+            <button class="option-btn" data-value="esevai">
+              <span class="opt-icon">🏪</span>
+              <div class="opt-desc">
+                <span class="opt-label" data-i18n="chan_esevai">இ-சேவை மையம் (e-Sevai / CSC)</span>
+                <span class="opt-hint" data-i18n="chan_esevai_hint">அவர்கள் ஸ்கேன் செய்து சமர்ப்பிப்பர்</span>
+              </div>
+            </button>
+            <button class="option-btn" data-value="online">
+              <span class="opt-icon">💻</span>
+              <div class="opt-desc">
+                <span class="opt-label" data-i18n="chan_online">வீட்டிலிருந்தே ஆன்லைன் போர்டல் (tnesevai)</span>
+                <span class="opt-hint" data-i18n="chan_online_hint">கணினி அல்லது மொபைல் மூலம் சுய சமர்ப்பிப்பு</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3: The Dual-Layer Smart Checklist & Navigator -->
+    <section class="section-card hidden" id="checklist-section">
+      <!-- Service Overview Hero Header -->
+      <div class="service-hero-banner" id="service-hero">
+        <div class="hero-main-details">
+          <div class="service-badge-pill" id="selected-service-pill">ஜாதி சான்றிதழ்</div>
+          <h2 class="service-hero-title" id="selected-service-title">Community Certificate</h2>
+          <div class="service-quick-meta">
+            <span class="meta-tag">⏳ <strong id="hero-timeline">15 நாட்கள்</strong></span>
+            <span class="meta-tag">💰 <strong id="hero-fee">அரசு கட்டணம்: ₹60</strong></span>
+            <span class="meta-tag">🏢 <strong id="hero-dept">வருவாய்த் துறை (TNeGA)</strong></span>
+            <span class="meta-tag live-office-tag" id="live-office-status">
+              <span class="live-dot green" id="live-dot-indicator"></span>
+              <strong id="live-office-status-text">கவுண்டர் திறந்துள்ளது</strong>
+            </span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button id="listen-all-checklist-btn" class="btn-voice-hero">
+            <span class="icon">📢</span>
+            <span id="i18n-listen-full">முழு பட்டியலையும் தமிழில் கேட்க</span>
+          </button>
+          <div class="hero-secondary-buttons">
+            <button id="whatsapp-share-btn" class="btn-whatsapp">
+              <span class="icon">💬</span>
+              <span id="i18n-share-wa">WhatsApp-ல் பகிர</span>
+            </button>
+            <button id="print-checklist-btn" class="btn-print">
+              <span class="icon">🖨️</span>
+              <span id="i18n-print-slip">Checklist அச்சிட (Print)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Readiness Progress Bar -->
+      <div class="readiness-card">
+        <div class="readiness-header">
+          <div class="readiness-title-group">
+            <span class="readiness-label" id="i18n-readiness-label">உங்கள் தயார் நிலை (Readiness Score):</span>
+            <span class="readiness-score" id="readiness-score-text">0%</span>
+          </div>
+          <span class="readiness-status" id="readiness-status-msg">ஆவணங்களை சரிபார்க்கவும்</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar-fill" id="readiness-bar" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Crucial Prerequisites Warning (If any) -->
+      <div class="prereq-alert-box" id="prereq-alert">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-body">
+          <h4 id="i18n-prereq-title">முக்கிய நிபந்தனை (Prerequisite)</h4>
+          <p id="prereq-content">வருமானச் சான்றிதழ் 6 மாத காலத்திற்குள் பெறப்பட்டதாக இருக்க வேண்டும்.</p>
+        </div>
+      </div>
+
+      <!-- Mini Tool: Document Validity & Expiry Checker -->
+      <div class="expiry-checker-card" id="expiry-checker-box">
+        <div class="checker-header">
+          <div class="checker-title-box">
+            <span class="checker-icon">📅</span>
+            <div>
+              <h4 id="i18n-checker-title">பழைய சான்றிதழ் செல்லுபடியாகும் கால சரிபார்ப்பு (Validity Checker)</h4>
+              <p id="i18n-checker-desc">உங்கள் பழைய வருமானச் சான்றிதழ் இன்னும் செல்லுமா? வழங்கப்பட்ட தேதியை உள்ளிட்டு சரிபார்க்கவும்.</p>
+            </div>
+          </div>
+          <button id="toggle-checker-btn" class="btn-secondary-sm">தேதியை சோதிக்க (Check Date)</button>
+        </div>
+        <div class="checker-body hidden" id="checker-body">
+          <div class="checker-input-row">
+            <label id="i18n-issue-date-lbl">வழங்கப்பட்ட தேதி (Date of Issue):</label>
+            <input type="date" id="cert-issue-date" class="form-input" />
+            <button id="verify-validity-btn" class="btn-primary-sm">சரிபார் (Verify)</button>
+          </div>
+          <div id="validity-result" class="validity-result-box hidden"></div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs: Official vs Ground Reality vs Simulator -->
+      <div class="tabs-nav-bar" role="tablist">
+        <button class="tab-item active" data-tab="official" role="tab" aria-selected="true">
+          <span class="tab-icon">📋</span>
+          <span id="i18n-tab-official">அதிகாரப்பூர்வ ஆவணங்கள் (Official)</span>
+          <span class="tab-count-badge" id="official-count">5</span>
+        </button>
+        <button class="tab-item alert-tab" data-tab="ground-reality" role="tab" aria-selected="false">
+          <span class="tab-icon">⚡</span>
+          <span id="i18n-tab-ground">கள நிலவர குறிப்புகள் (Ground Reality)</span>
+          <span class="tab-count-badge" id="ground-count">4</span>
+        </button>
+        <button class="tab-item" data-tab="office-guide" role="tab" aria-selected="false">
+          <span class="tab-icon">🏛️</span>
+          <span id="i18n-tab-guide">அலுவலக வழிகாட்டி & நேரம் (Logistics)</span>
+        </button>
+        <button class="tab-item highlight-tab" data-tab="portal-simulator" role="tab" aria-selected="false">
+          <span class="tab-icon">🖥️</span>
+          <span id="i18n-tab-simulator">e-Sevai போர்டல் வழிகாட்டி (Simulator)</span>
+        </button>
+      </div>
+
+      <!-- TAB PANEL 1: Official Documents -->
+      <div class="tab-panel active" id="tab-official-panel">
+        <div class="panel-intro-bar">
+          <p id="i18n-official-intro">அரசு விதிகளின்படி கட்டாயம் சமர்ப்பிக்க வேண்டிய அசல் மற்றும் நகல் ஆவணங்கள்:</p>
+          <span class="helper-badge">எடுத்து வைத்தவுடன் டிக் செய்யவும்</span>
+        </div>
+        <div class="checklist-items-container" id="official-checklist-items">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- TAB PANEL 2: Ground Reality & Officer Intel -->
+      <div class="tab-panel" id="tab-ground-reality-panel">
+        <div class="panel-intro-bar warning-bar">
+          <div class="intro-text">
+            <h4 id="i18n-ground-intel-title">🔥 அலுவலகங்களில் வழக்கமாக கேட்கப்படும் "அறிவிக்கப்படாத" விஷயங்கள்:</h4>
+            <p id="i18n-ground-intel-desc">அதிகாரிகள் அல்லது VAO கூடுதல் ஆவணங்கள் கேட்டு உங்களை மீண்டும் வீட்டிற்கு அனுப்பாமல் இருக்க இவற்றை தவறாமல் எடுத்துச் செல்லுங்கள்.</p>
+          </div>
+        </div>
+        <div class="checklist-items-container" id="ground-checklist-items">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- TAB PANEL 3: Office Guide & Timings -->
+      <div class="tab-panel" id="tab-office-guide-panel">
+        <div class="logistics-grid" id="logistics-content">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- TAB PANEL 4: Online TN e-Sevai Portal Field Simulator -->
+      <div class="tab-panel" id="tab-portal-simulator-panel">
+        <div class="simulator-wrapper">
+          <div class="simulator-header">
+            <div class="sim-badge">TN e-Sevai / Citizen Portal (tnesevai.tn.gov.in) Simulation</div>
+            <h3 id="i18n-sim-title">ஆன்லைன் படிவத்தை எவ்வாறு நிரப்புவது? நேரடி மாதிரி</h3>
+            <p id="i18n-sim-desc">ஒவ்வொரு கட்டத்திலும் என்ன தகவல் கொடுக்க வேண்டும் என்பதை எளிமையாகப் புரிந்துகொள்ளுங்கள்.</p>
+          </div>
+
+          <div class="sim-browser-frame">
+            <div class="sim-address-bar">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="sim-url">https://www.tnesevai.tn.gov.in/Citizen/Registration.aspx</span>
+            </div>
+
+            <div class="sim-form-body" id="simulator-fields-container">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ground Reality Feedback Section -->
+      <div class="community-feedback-card">
+        <div class="feedback-left">
+          <span class="shield-icon">🛡️</span>
+          <div>
+            <h4 id="i18n-verify-title">சமூக உறுதிப்படுத்தல் (Community Verified)</h4>
+            <p id="community-verify-text">கடந்த 7 நாட்களில் உங்கள் பகுதியில் 24 பேர் இந்த பட்டியலின்படி சான்றிதழ் பெற்றுள்ளனர்.</p>
+          </div>
+        </div>
+        <button id="open-feedback-modal-btn" class="btn-feedback">
+          ✍️ உங்கள் அலுவலகத்தில் இது சரியாக இருந்ததா? (Report)
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Ground Truth Feedback Modal -->
+  <div class="modal-overlay hidden" id="feedback-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="i18n-modal-feedback-title">கள ஆய்வு கருத்துப் பகிர்வு (Ground Intel Report)</h3>
+        <button class="modal-close-btn" id="close-feedback-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p id="i18n-modal-desc">நீங்கள் வட்டாட்சியர் அல்லது இ-சேவை மையத்திற்கு சென்றபோது ஏதேனும் கூடுதல் ஆவணம் கேட்டார்களா?</p>
+        
+        <div class="modal-form-group">
+          <label id="i18n-lbl-taluk">உங்கள் மாவட்டம் / வட்டம் (District & Taluk):</label>
+          <input type="text" id="feedback-taluk" placeholder="எ.கா: மதுரை தெற்கு / Madurai South" class="form-input" />
+        </div>
+
+        <div class="modal-form-group">
+          <label id="i18n-lbl-status">அனைத்து ஆவணங்களும் ஏற்றுக்கொள்ளப்பட்டதா?</label>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" name="acc_status" value="yes" checked />
+              <span id="i18n-opt-yes">ஆம், ஒரே முறையில் முடிந்தது (100% Success)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="acc_status" value="extra" />
+              <span id="i18n-opt-extra">கூடுதல் ஆவணம் கேட்டார்கள் (Asked extra doc)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-form-group hidden" id="extra-doc-field">
+          <label id="i18n-lbl-extra">அவர்கள் கேட்ட கூடுதல் ஆவணம் என்ன?</label>
+          <input type="text" id="feedback-extra-doc" placeholder="எ.கா: மின் கட்டண ரசீது / தாத்தாவின் TC" class="form-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-feedback-btn">ரத்து செய்</button>
+        <button class="btn-primary" id="submit-feedback-btn">உறுதிப்படுத்து (Submit)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CSC Operator Settings Modal -->
+  <div class="modal-overlay hidden" id="csc-settings-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🏪 இ-சேவை / Cyber Cafe விவரங்கள் (CSC Settings)</h3>
+        <button class="modal-close-btn" id="close-csc-modal-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p>வாடிக்கையாளருக்கு அச்சிட்டு வழங்கும் ரசீதில் (Checklist Slip) உங்கள் மையத்தின் பெயர் இடம் பெறும்.</p>
+        <div class="modal-form-group">
+          <label>மையத்தின் பெயர் (Shop / Center Name):</label>
+          <input type="text" id="csc-center-name-input" value="ஸ்ரீ முருகன் சைபர் பாயிண்ட் & இ-சேவை மையம்" class="form-input" />
+        </div>
+        <div class="modal-form-group">
+          <label>தொடர்பு எண் (Phone Number):</label>
+          <input type="text" id="csc-phone-input" value="98401 23456" class="form-input" />
+        </div>
+        <div class="modal-form-group">
+          <label>வாடிக்கையாளர் பெயர் / டோக்கன் (Optional Client Name):</label>
+          <input type="text" id="csc-client-name-input" placeholder="எ.கா: திருமதி. லட்சுமி" class="form-input" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancel-csc-btn">ரத்து செய்</button>
+        <button class="btn-primary" id="save-csc-btn">சேமி (Save & Print)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Slip Container (Visible only in print or preview) -->
+  <div id="printable-slip" class="print-only">
+    <div class="print-header">
+      <div class="print-brand">
+        <h2>SevaMarg - சேவை மார்க்</h2>
+        <p class="print-tag">அரசு ஆவண சரிபார்ப்பு சீட்டு (Preparation Checklist Slip)</p>
+      </div>
+      <div class="print-shop-details" id="print-shop-details">
+        <h3 id="print-shop-name">ஸ்ரீ முருகன் சைபர் பாயிண்ட் & இ-சேவை</h3>
+        <p id="print-shop-phone">தொடர்புக்கு: 98401 23456</p>
+      </div>
+    </div>
+
+    <div class="print-client-bar">
+      <span><strong>சேவை:</strong> <span id="print-service-title">சான்றிதழ்</span></span>
+      <span><strong>விண்ணப்பதாரர்:</strong> <span id="print-client-name">பொதுப்பயனாளி</span></span>
+      <span><strong>தேதி:</strong> <span id="print-date">30-Sep-2026</span></span>
+    </div>
+
+    <div class="print-section">
+      <h4>1. கொண்டு செல்ல வேண்டிய அசல் மற்றும் நகல் ஆவணங்கள்:</h4>
+      <div id="print-official-list" class="print-list"></div>
+    </div>
+
+    <div class="print-section print-warning-section">
+      <h4>2. மறக்கக்கூடாத கள நிலவர குறிப்புகள் (Ground Reality Tips):</h4>
+      <div id="print-ground-list" class="print-list"></div>
+    </div>
+
+    <div class="print-footer">
+      <p>💡 <em>குறிப்பு: இந்த ஆவணங்களை சரியாக எடுத்துச் சென்றால் அலுவலகத்தில் திருப்பி அனுப்பப்பட மாட்டீர்கள்.</em></p>
+      <div class="print-cut-line">------------------- கத்தரித்து வைத்துக் கொள்ளவும் (Cut Here) -------------------</div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <p><strong>SevaMarg (சேவை மார்க்)</strong> - குடிமக்கள் வழிகாட்டி தளம். 100% பாதுகாப்பானது - தனிநபர் தரவுகள் சேமிக்கப்படுவதில்லை.</p>
+      <p class="footer-sub">தகவல்கள் தமிழ்நாடு இ-சேவை (TNeGA) வழிகாட்டுதல் மற்றும் கள அனுபவத்தின் அடிப்படையில் தொகுக்கப்பட்டவை.</p>
+      <div class="footer-diagnostics">
+        <button id="run-diagnostics-btn" class="btn-diagnostics">
+          🩺 கணினி சுய பரிசோதனை (Run System Self-Test)
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- System Diagnostics Modal -->
+  <div class="modal-overlay hidden" id="diagnostics-modal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3>🩺 SevaMarg அமைப்பின் சுய பரிசோதனை (System Integration Test)</h3>
+        <button class="modal-close-btn" id="close-diagnostics-btn">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="test-intro">அனைத்து API எண்ட்பாயிண்ட்கள், ஆடியோ ஸ்ட்ரீம்கள், மொழி அகராதிகள் மற்றும் உள்ளக அமைப்புகளின் நேரடி பரிசோதனை முடிவுகள்:</p>
+        <div id="diagnostics-results" class="diagnostics-list">
+          <div class="test-item-row">
+            <span>சோதனை துவங்குகிறது...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="dismiss-diagnostics-btn">மூடு (Close)</button>
+        <button class="btn-primary" id="rerun-diagnostics-btn">மீண்டும் சோதி (Re-run Tests)</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
