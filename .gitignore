@@ -15,3 +15,6 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+
+# Local helper scripts
+push_to_github.bat
